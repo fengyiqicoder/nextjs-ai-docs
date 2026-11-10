@@ -1,0 +1,38 @@
+---
+title: Welcome to Fieldbook
+description: A docs site you can read, search and ask questions of. Write pages in MDX, deploy the static export anywhere.
+section: Start here
+order: 0
+---
+
+Fieldbook is a documentation template for Next.js. You write pages as MDX files in `content/`. The build turns them into plain HTML, adds a search index, and writes `llms.txt` and `llms-full.txt` so AI tools can read your docs. An Ask AI box answers reader questions from the same pages.
+
+Replace these pages with your own. They explain how the template works, so read them once first.
+
+## What you get
+
+- **Pages from files.** Every `.mdx` file in `content/` becomes a page. The folder path is the URL.
+- **A sidebar that builds itself** from the `section` and `order` in each page's front matter.
+- **Full-text search** with [Pagefind](https://pagefind.app). The index is built after `next build` and loads only when someone types.
+- **`llms.txt` and `llms-full.txt`** at the site root, written from the built HTML.
+- **An Ask AI box.** Readers ask a question in their own words and get an answer with links to the pages it used.
+- **Light and dark themes** that follow the reader's system, with a switch in the header.
+- **A static export.** No server, no database. Host it on Vercel or any static host.
+
+## Where to go next
+
+<Steps>
+
+1. [Run it on your computer](/guides/getting-started/)
+
+   Install, start the dev server, and see where things live.
+
+2. [Write your first page](/guides/writing-pages/)
+
+   Front matter, headings, code blocks and the two built-in components.
+
+3. [Deploy it](/guides/deploying/)
+
+   One click on Vercel, or upload `out/` anywhere.
+
+</Steps>

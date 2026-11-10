@@ -1,0 +1,74 @@
+---
+title: Write a page
+description: Front matter, URLs, headings, code blocks, tables and the Note and Steps components.
+section: Writing
+order: 1
+---
+
+## Add a file
+
+Create `content/guides/install.mdx`:
+
+```mdx
+---
+title: Install the CLI
+description: Get the command line tool on macOS, Linux and Windows.
+section: Writing
+order: 2
+---
+
+Text in **Markdown**, with MDX components when you need them.
+```
+
+The page is now at `/guides/install/`. `content/index.mdx` is the home page, and an `index.mdx` inside a folder is that folder's page.
+
+## Front matter
+
+| Field | Used for | Default |
+| --- | --- | --- |
+| `title` | The page heading, the sidebar link and the browser tab | The file name |
+| `description` | The line under the heading, search results and `llms.txt` | Empty |
+| `section` | Which sidebar group the page sits in | `Start here` |
+| `order` | Position inside its section, lowest first | `100` |
+
+The section order is set once in `SECTIONS` in `lib/content.ts`. A section that is not in that list goes at the end.
+
+## Headings
+
+Use `##` and `###`. Each gets an id from its text, so `## Front matter` can be linked as `#front-matter`. The "On this page" list on wide screens is built from them.
+
+Keep one `#` heading per page: the title from front matter already is one.
+
+## Code
+
+Fenced code blocks are highlighted at build time, so no highlighter ships to the browser. Name the language after the fence:
+
+```ts
+export function greet(name: string) {
+  return `Hello, ${name}`;
+}
+```
+
+## Components
+
+Two components are available in every page without an import.
+
+`<Note>` is for something worth knowing that is not on the main path:
+
+```mdx
+<Note title="Before you upgrade">
+  Back up your config file first.
+</Note>
+```
+
+<Note title="Before you upgrade">
+  Back up your config file first.
+</Note>
+
+`<Steps>` wraps a numbered list and draws it as a sequence. Leave a blank line after the opening tag and before the closing one, so the list inside is read as Markdown. The home page uses it.
+
+To add your own component, export it from `components/mdx-components.tsx`.
+
+## Links
+
+Link to other pages with their path, ending in a slash: `[deploying](/guides/deploying/)`. Links to other sites open in a new tab.

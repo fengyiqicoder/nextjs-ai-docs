@@ -1,0 +1,710 @@
+/* Fieldbook: cool paper, navy ink, one highlighter. The highlighter marks where you are
+   (the current page, search matches, selected text) and nothing else. */
+
+:root {
+  --paper: #e9eef3;
+  --sheet: #f7f9fb;
+  --ink: #1d2b4f;
+  --ink-2: #4a5878;
+  --rule: #c5cfdb;
+  --link: #2747a8;
+  --marker: #ffd23f;
+  --marker-ink: #1d2b4f;
+  --code-bg: #dfe6ee;
+  --focus: #2747a8;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --paper: #121a2b;
+  --sheet: #18223a;
+  --ink: #dce3ee;
+  --ink-2: #9aa7bf;
+  --rule: #2c3858;
+  --link: #a8bcff;
+  --marker: #e8b923;
+  --marker-ink: #121a2b;
+  --code-bg: #1c2742;
+  --focus: #a8bcff;
+  color-scheme: dark;
+}
+
+/* Before the theme script runs (or with scripts off), follow the system setting. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121a2b;
+    --sheet: #18223a;
+    --ink: #dce3ee;
+    --ink-2: #9aa7bf;
+    --rule: #2c3858;
+    --link: #a8bcff;
+    --marker: #e8b923;
+    --marker-ink: #121a2b;
+    --code-bg: #1c2742;
+    --focus: #a8bcff;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--font-body), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--marker);
+  color: var(--marker-ink);
+}
+
+a {
+  color: var(--link);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  z-index: 20;
+}
+
+.skip:focus {
+  top: 0.75rem;
+}
+
+/* The highlighter stroke, reused wherever something is marked. The uneven corners make it
+   read as a pen stroke rather than a box. */
+.mark,
+.nav-group a[aria-current="page"],
+.search-results mark {
+  background: var(--marker);
+  color: var(--marker-ink);
+  border-radius: 3px 9px 4px 10px / 10px 3px 9px 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.search-results mark {
+  padding: 0 0.12em;
+}
+
+/* Header */
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 4rem;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  font: 800 1.35rem/1 var(--font-display), sans-serif;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.top-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.icon-button,
+.ask-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 2.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font: 700 0.875rem/1 var(--font-body), sans-serif;
+  cursor: pointer;
+}
+
+.icon-button {
+  width: 2.25rem;
+}
+
+.ask-button {
+  padding: 0 0.8rem;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.ask-button:hover {
+  background: color-mix(in srgb, var(--ink) 86%, var(--paper));
+}
+
+.linkish {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+/* Search */
+
+.search {
+  position: relative;
+  width: min(20rem, 40vw);
+}
+
+.search input {
+  width: 100%;
+  height: 2.25rem;
+  padding: 0 2rem 0 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.search input::placeholder {
+  color: var(--ink-2);
+}
+
+.search kbd {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 0.35rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink-2);
+  font: 0.75rem/1.4 var(--font-mono), monospace;
+  pointer-events: none;
+}
+
+.search-results {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: min(30rem, calc(100vw - 2rem));
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0.5rem;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px -18px rgba(18, 26, 43, 0.45);
+}
+
+.search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-results a {
+  display: block;
+  padding: 0.6rem 0.7rem;
+  border-radius: 6px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.search-results a:hover,
+.search-results a:focus-visible {
+  background: var(--code-bg);
+}
+
+.result-title {
+  display: block;
+  font-weight: 700;
+}
+
+.result-excerpt {
+  display: block;
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.search-empty {
+  margin: 0;
+  padding: 0.6rem 0.7rem;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+
+/* Frame: sidebar, page, table of contents */
+
+.frame {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr) 13rem;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.sidebar,
+.toc {
+  position: sticky;
+  top: 4rem;
+  align-self: start;
+  max-height: calc(100vh - 4rem);
+  overflow: auto;
+  padding: 2.5rem 0 3rem;
+}
+
+.menu {
+  display: none;
+}
+
+.nav-group + .nav-group {
+  margin-top: 1.75rem;
+}
+
+.nav-section {
+  margin: 0 0 0.5rem;
+  color: var(--ink-2);
+  font: 700 0.8125rem/1.3 var(--font-display), sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.nav-group ul,
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-group li {
+  margin: 0.1rem 0;
+}
+
+.nav-group a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.96875rem;
+  line-height: 1.9;
+}
+
+.nav-group a:hover {
+  text-decoration: underline;
+}
+
+.nav-group a[aria-current="page"] {
+  display: inline-block;
+  font-weight: 700;
+  line-height: 1.55;
+  padding: 0.05em 0.4em;
+  margin: 0.15em -0.4em;
+}
+
+.toc-title {
+  margin: 0 0 0.5rem;
+  color: var(--ink-2);
+  font: 700 0.8125rem/1.3 var(--font-display), sans-serif;
+}
+
+.toc li {
+  margin: 0.3rem 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.toc a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.toc a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.toc-sub {
+  padding-left: 0.85rem;
+}
+
+/* Page */
+
+.page {
+  min-width: 0;
+  max-width: 46rem;
+  padding: 2.5rem 0 5rem;
+}
+
+.crumb {
+  margin: 0 0 0.75rem;
+  color: var(--ink-2);
+  font: 700 0.875rem/1 var(--font-display), sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), sans-serif;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 4.5vw, 3rem);
+  font-weight: 750;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.lede {
+  margin: 1rem 0 0;
+  max-width: 36rem;
+  color: var(--ink-2);
+  font-size: 1.1875rem;
+  line-height: 1.5;
+}
+
+.prose {
+  margin-top: 2.25rem;
+}
+
+.prose > * + * {
+  margin-top: 1.1em;
+}
+
+.prose p,
+.prose li {
+  max-width: 68ch;
+}
+
+.prose h2 {
+  margin: 2.6em 0 0;
+  padding-top: 1.1em;
+  border-top: 1px solid var(--rule);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.prose h3 {
+  margin: 2em 0 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.6em;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.3em;
+}
+
+.prose li + li {
+  margin-top: 0.35em;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875em;
+}
+
+.prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--code-bg);
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--sheet);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  display: grid;
+}
+
+/* rehype-pretty-code: two themes in one block, CSS picks one. */
+.prose pre [data-line] span {
+  color: var(--shiki-light);
+}
+
+:root[data-theme="dark"] .prose pre [data-line] span {
+  color: var(--shiki-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose pre [data-line] span {
+    color: var(--shiki-dark);
+  }
+}
+
+.prose figure[data-rehype-pretty-code-figure] {
+  margin: 1.1em 0 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  padding: 0.55rem 0.75rem 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+}
+
+.prose blockquote {
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--ink-2);
+}
+
+.note {
+  padding: 0.9rem 1.1rem;
+  border-left: 4px solid var(--marker);
+  background: var(--sheet);
+  border-radius: 0 8px 8px 0;
+}
+
+.note > * {
+  margin: 0;
+}
+
+.note > * + * {
+  margin-top: 0.6em;
+}
+
+.note-title {
+  font: 700 0.9375rem/1.3 var(--font-display), sans-serif;
+}
+
+/* <Steps>: the ordered list becomes a numbered path down the page. */
+.steps ol {
+  list-style: none;
+  counter-reset: step;
+  padding-left: 0;
+}
+
+.steps ol > li {
+  position: relative;
+  counter-increment: step;
+  padding: 0 0 1.25rem 2.75rem;
+  margin: 0;
+  border-left: 1px solid var(--rule);
+  margin-left: 0.9rem;
+}
+
+.steps ol > li:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.steps ol > li::before {
+  content: counter(step);
+  position: absolute;
+  left: -0.9rem;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 0.875rem/1 var(--font-display), sans-serif;
+}
+
+.steps ol > li > p:first-child {
+  margin-top: 0;
+  font-weight: 700;
+}
+
+/* Page footer */
+
+.page-foot {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.foot-ask {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pager a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  color: var(--ink);
+  font: 700 1.0625rem/1.3 var(--font-display), sans-serif;
+  text-decoration: none;
+}
+
+.pager a span {
+  color: var(--ink-2);
+  font: 400 0.875rem/1 var(--font-body), sans-serif;
+}
+
+.pager a:hover {
+  text-decoration: underline;
+}
+
+.pager-next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.edit {
+  display: inline-block;
+  margin-top: 2rem;
+  color: var(--ink-2);
+  font-size: 0.875rem;
+}
+
+/* Narrow screens */
+
+@media (max-width: 1100px) {
+  .frame {
+    grid-template-columns: 14rem minmax(0, 1fr);
+  }
+  .toc {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .frame {
+    display: block;
+  }
+  .sidebar {
+    display: none;
+  }
+  .menu {
+    display: block;
+    margin-top: 1rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--sheet);
+  }
+  .menu summary {
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .menu nav {
+    padding: 1rem 0 0.5rem;
+  }
+  .page {
+    padding-top: 1.75rem;
+  }
+  .top {
+    gap: 0.5rem;
+  }
+  .search {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+  .search kbd {
+    display: none;
+  }
+  .ask-button span {
+    display: none;
+  }
+  .ask-button {
+    width: 2.25rem;
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

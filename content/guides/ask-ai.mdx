@@ -1,0 +1,63 @@
+---
+title: The Ask AI box
+description: Readers ask a question in their own words and get an answer from your pages, with links. Set it up with one free key.
+section: Features
+order: 2
+---
+
+The "Ask the docs" button in the header opens a box where readers can type a question. The answer is written from your pages and links to the ones it used. It runs on [OneTag AI](https://onetagai.com/?ref=nextjs-ai-docs), so there is no server or API key to keep secret.
+
+## Get a free key
+
+Get one on [onetagai.com](https://onetagai.com/?ref=nextjs-ai-docs#get-key), or from a terminal:
+
+```sh
+curl -X POST https://onetagai.com/api/signup -H "Content-Type: application/json" -d '{"email":"you@example.com"}'
+```
+
+Put it in `.env.local` for your computer, and in your host's environment variables for the live site:
+
+```sh
+NEXT_PUBLIC_ONETAG_KEY=ot_your_key
+```
+
+The key is public by design. It ends up in the built HTML, like an analytics ID. The free plan has 1,000,000 tokens a month with a hard cap. No bill can appear.
+
+## Without a key
+
+The template uses the demo key, which only answers on `localhost`. The build prints one warning about it and still succeeds. On a live site the demo key gets no answers, so set your own key before you share the link.
+
+## Where it gets its answers
+
+When a reader asks, the box searches this site's Pagefind index for the pages that match, and sends the question with the text of those pages to write the answer. If there is no index, it falls back to `llms-full.txt`, then to the current page.
+
+## Change how it looks
+
+The script tag is in `app/layout.tsx`:
+
+```tsx
+<Script
+  src="https://onetagai.com/ask-docs.js"
+  strategy="afterInteractive"
+  data-key={askAi.key}
+  data-ref="nextjs-ai-docs"
+  data-label="Ask the docs"
+  data-position="none"
+  data-button="[data-ask-ai]"
+/>
+```
+
+| Attribute | What it does |
+| --- | --- |
+| `data-label` | Button and box title |
+| `data-placeholder` | Text in the empty question field |
+| `data-position` | `none` here, because the header has its own button. `float` or `left` adds a floating button |
+| `data-button` | CSS selector of the elements that open the box |
+| `data-color` | Accent color, hex without `#` |
+| `data-theme` | `light` or `dark`. By default it follows the page |
+| `data-lang` | `en`, `zh-CN` or `zh-TW`. By default it follows the page |
+| `data-rules` | Extra instructions for the answers, for example "Answer in two sentences" |
+
+Any element with the `data-ask-ai` attribute opens the box. You can also call `onetagAskDocs.open()`, or `onetagAskDocs.ask("How do I deploy?")` to open it with a question.
+
+To remove the box, delete the `<Script>` and the buttons with `data-ask-ai`.

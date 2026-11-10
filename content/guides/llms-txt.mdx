@@ -1,0 +1,27 @@
+---
+title: llms.txt and llms-full.txt
+description: Two plain text files at the site root that let AI tools read your docs. Written at build time, no key needed.
+section: Features
+order: 3
+---
+
+Every build writes two files to the root of the site:
+
+- **`/llms.txt`** lists every page with its title, link and description, in the [llmstxt.org](https://llmstxt.org) format.
+- **`/llms-full.txt`** has the full text of every page as Markdown, in one file.
+
+People paste these into AI assistants, and coding tools read them to learn a library. They need no key and no network.
+
+## How they are made
+
+`scripts/postbuild.mjs` runs [static-llms-txt](https://www.npmjs.com/package/static-llms-txt) over `out/`. It reads the article of each built page, leaves out the header, sidebar and footer, and turns the rest into Markdown.
+
+Links are absolute when the site knows its address. On Vercel it does. Elsewhere, set `NEXT_PUBLIC_SITE_URL`:
+
+```sh
+NEXT_PUBLIC_SITE_URL=https://docs.example.com
+```
+
+## Write your own
+
+If you put a hand-written `llms.txt` in `public/`, it is kept. The generator never overwrites a file it did not write.

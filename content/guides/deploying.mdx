@@ -1,0 +1,42 @@
+---
+title: Deploy
+description: Deploy to Vercel with one click, or upload the out folder to any static host.
+section: Ship it
+order: 1
+---
+
+The build is a folder of static files, `out/`. Anything that can serve files can host it.
+
+## Vercel
+
+<Steps>
+
+1. Click "Deploy" in the README
+
+   Vercel copies the repository to your GitHub account and asks for `NEXT_PUBLIC_ONETAG_KEY`.
+
+2. Paste your key
+
+   Get one first if you do not have one. See [the Ask AI box](/guides/ask-ai/).
+
+3. Wait for the build
+
+   Vercel runs `npm run build` and serves `out/`. Every push to your main branch deploys again.
+
+</Steps>
+
+Vercel sets `VERCEL_PROJECT_PRODUCTION_URL`, so the links in `llms.txt` use your production domain without extra setup.
+
+## Any other static host
+
+```sh
+NEXT_PUBLIC_ONETAG_KEY=ot_your_key NEXT_PUBLIC_SITE_URL=https://docs.example.com npm run build
+```
+
+Upload the contents of `out/`. Pages are folders with an `index.html`, so URLs like `/guides/search/` work on Netlify, Cloudflare Pages, GitHub Pages and S3 without rewrite rules.
+
+## Check before you share the link
+
+- Open a page and press `/`. Search should find a word from another page.
+- Click "Ask the docs" and ask something your pages answer.
+- Open `/llms.txt` and `/llms-full.txt`.

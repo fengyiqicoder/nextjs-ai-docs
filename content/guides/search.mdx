@@ -1,0 +1,22 @@
+---
+title: Search
+description: Full-text search with Pagefind, built from the static export after next build.
+section: Features
+order: 1
+---
+
+The search box in the header uses [Pagefind](https://pagefind.app). Press `/` anywhere to jump to it.
+
+## How it works
+
+After `next build` writes the site to `out/`, `scripts/postbuild.mjs` runs Pagefind over the HTML and writes the index to `out/pagefind/`. The index is split into small chunks. The browser downloads `pagefind.js` the first time someone types, then only the chunks that match the words typed.
+
+Nothing loads for readers who never search, which keeps pages fast.
+
+## What gets indexed
+
+Only the article. The page template marks it with `data-pagefind-body`, so the header, sidebar and footer are left out. To leave out part of a page, wrap it in an element with `data-pagefind-ignore`.
+
+## In development
+
+The index only exists after a build. Under `npm run dev` the search box says so. Run `npm run build` and `npm start` to try it.

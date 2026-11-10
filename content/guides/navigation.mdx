@@ -1,0 +1,30 @@
+---
+title: Sidebar and page order
+description: How the sidebar is built from front matter, and how to rename or reorder its sections.
+section: Writing
+order: 2
+---
+
+There is no navigation file to keep up to date. The sidebar is built from the pages themselves.
+
+## How it is built
+
+1. Every page names a `section` in its front matter.
+2. Sections are shown in the order of the `SECTIONS` list in `lib/content.ts`.
+3. Inside a section, pages are sorted by `order`, then by title.
+
+The "Previous" and "Next" links at the bottom of each page follow the same order, so a reader can go through the docs from start to end.
+
+## Rename or reorder sections
+
+Edit the list in `lib/content.ts`:
+
+```ts
+export const SECTIONS = ["Start here", "Writing", "Features", "Ship it"];
+```
+
+Then change the `section` of the pages that used the old name.
+
+## On small screens
+
+Below 760 pixels wide the sidebar folds into a "Menu" button above the page. It is a plain `<details>` element, so it works before any JavaScript loads.

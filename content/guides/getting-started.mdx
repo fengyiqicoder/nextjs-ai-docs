@@ -1,0 +1,47 @@
+---
+title: Run it on your computer
+description: Install the template, start the dev server and find your way around the files.
+section: Start here
+order: 1
+---
+
+## Install
+
+You need Node.js 20.9 or later.
+
+```sh
+npm install
+npm run dev
+```
+
+Open http://localhost:3000. Edit a file in `content/` and the page reloads.
+
+## Build the real site
+
+`npm run dev` is for writing. Search only works on the built site, because the search index is made from the final HTML.
+
+```sh
+npm run build
+npm start
+```
+
+`npm run build` runs `next build`, which writes the static site to `out/`, then `scripts/postbuild.mjs`, which adds the search index and the llms files. `npm start` serves `out/` at http://localhost:3000.
+
+## Where things live
+
+| Path | What it is |
+| --- | --- |
+| `content/` | Your pages, as `.mdx` files |
+| `lib/site.ts` | Site name, description, repository link, Ask AI settings |
+| `lib/content.ts` | Reads `content/` and builds the sidebar |
+| `app/layout.tsx` | Header, sidebar and the Ask AI script |
+| `app/globals.css` | All the styles, with the colors at the top |
+| `scripts/postbuild.mjs` | Search index and llms files, after the build |
+
+## Make it yours
+
+Open `lib/site.ts` and change `name`, `description` and `repo`. The name shows in the header and in every page title. Set `repo` to your repository so the "Edit this page" links work, or set it to an empty string to hide them.
+
+<Note title="Colors">
+  The palette is six variables at the top of `app/globals.css`, once for light and once for dark. Change `--marker` to recolor the highlighter that marks the current page and search matches.
+</Note>
