@@ -49,7 +49,7 @@ Or get one on [onetagai.com](https://onetagai.com/?ref=nextjs-ai-docs#get-key). 
 NEXT_PUBLIC_ONETAG_KEY=ot_your_key
 ```
 
-The key is public by design. It ends up in the built HTML, like an analytics ID. The free plan has 1,000,000 tokens a month with a hard cap, so no bill can appear.
+The key is public by design. It ends up in the built HTML, like an analytics ID. The free plan has 1,000,000 tokens, one time, no monthly reset with a hard cap, so no bill can appear.
 
 ## Options
 

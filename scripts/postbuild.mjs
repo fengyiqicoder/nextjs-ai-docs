@@ -38,7 +38,7 @@ if (!key || key === DEMO_KEY) {
     [
       "",
       "[nextjs-ai-docs] No NEXT_PUBLIC_ONETAG_KEY set. The Ask AI box uses the demo key, which only answers on localhost.",
-      "Get a free key (public by design, 1,000,000 tokens a month, hard cap, no bill) and set NEXT_PUBLIC_ONETAG_KEY:",
+      "Get a free key (public by design, 1,000,000 tokens, one time, no monthly reset, hard cap, no bill) and set NEXT_PUBLIC_ONETAG_KEY:",
       '  curl -X POST https://onetagai.com/api/signup -H "Content-Type: application/json" -d \'{"email":"you@example.com"}\'',
       "",
     ].join("\n"),
